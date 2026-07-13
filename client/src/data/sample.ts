@@ -1,19 +1,7 @@
-import type { PlateVariant } from '../components/PlateIllustration';
+import type { RecipeCardData } from '../types';
 
-/** Dados de exemplo para a Home. Serão substituídos pela API (MongoDB). */
-export type Diet = 'vegetariana' | 'vegana' | 'sem-gluten';
-
-export type SampleRecipe = {
-  id: string;
-  title: string;
-  meta: string;
-  time: string;
-  level: 'Fácil' | 'Médio' | 'Difícil';
-  rating: string;
-  diet?: Diet;
-  bg: string;
-  plate: { variant: PlateVariant; c1: string; c2: string; c3: string };
-};
+/** Dados de exemplo da Home: reserva usada quando a API está fora do ar ou sem receitas importadas. */
+export type SampleRecipe = RecipeCardData;
 
 export const trending: SampleRecipe[] = [
   { id: 'moqueca-de-peixe', title: 'Moqueca de peixe com dendê', meta: 'Brasileira · Almoço e jantar', time: '50 min', level: 'Médio', rating: '4,8', bg: '#F8DFB4', plate: { variant: 'mix', c1: '#E0702B', c2: '#F2B233', c3: '#5FA05A' } },
@@ -33,12 +21,12 @@ export const plantBased: SampleRecipe[] = [
 ];
 
 export const categories = [
-  { name: 'Doces e sobremesas', sub: 'Bolos, tortas, pudins', cls: 'bg-saffron text-espresso', dot: 'bg-paprika' },
+  { name: 'Doces e sobremesas', slug: 'doces-e-sobremesas', sub: 'Bolos, tortas, pudins', cls: 'bg-saffron text-espresso', dot: 'bg-paprika' },
   { name: 'Salgados', sub: 'Assados, fritos e petiscos', cls: 'bg-paprika text-espresso', dot: 'bg-saffron' },
-  { name: 'Massas e pizzas', sub: 'Frescas, recheadas, de forno', cls: 'bg-tomato text-white', dot: 'bg-chili' },
+  { name: 'Massas e pizzas', slug: 'massas-e-pizzas', sub: 'Frescas, recheadas, de forno', cls: 'bg-tomato text-white', dot: 'bg-chili' },
   { name: 'Sopas e caldos', sub: 'Cremes e ensopados', cls: 'bg-roast text-cream', dot: 'bg-caramel' },
   { name: 'Churrasco', sub: 'Carnes, marinadas, grelha', cls: 'bg-chili text-cream', dot: 'bg-tomato' },
-  { name: 'Café da manhã', sub: 'Pães, ovos, panquecas', cls: 'bg-sand text-espresso', dot: 'bg-saffron' },
+  { name: 'Café da manhã', slug: 'cafe-da-manha-e-brunch', sub: 'Pães, ovos, panquecas', cls: 'bg-sand text-espresso', dot: 'bg-saffron' },
   { name: 'Bebidas e drinks', sub: 'Sucos, cafés, coquetéis', cls: 'bg-espresso text-saffron', dot: 'bg-roast' },
   { name: 'Pães e panificação', sub: 'Fermentação e forno', cls: 'bg-caramel text-white', dot: 'bg-paprika' },
 ];

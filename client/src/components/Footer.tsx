@@ -32,7 +32,11 @@ export default function Footer() {
         </div>
         <p className="max-w-3xl border-t border-[#7A4A30] pt-6 text-sm text-[#E9C9A5]">
           O RecipeNator é um projeto de portfólio. Contas, receitas e interações criadas por visitantes são
-          temporárias e podem ser apagadas diariamente.
+          temporárias e podem ser apagadas diariamente. Algumas receitas e fotos vêm da{' '}
+          <a href="https://www.themealdb.com" className="underline hover:text-saffron" target="_blank" rel="noreferrer">
+            TheMealDB
+          </a>
+          .
         </p>
       </div>
     </footer>

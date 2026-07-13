@@ -1,7 +1,8 @@
 import { Link } from 'react-router-dom';
 import RecipeCard from '../components/RecipeCard';
 import { Wordmark } from '../components/Logo';
-import { categories, dietFilters, events, plantBased, trending } from '../data/sample';
+import { categories, dietFilters, events, plantBased as plantFallback, trending as trendingFallback } from '../data/sample';
+import { useRecipes } from '../hooks/useRecipes';
 
 const container = 'mx-auto max-w-7xl px-5 sm:px-10';
 
@@ -12,6 +13,9 @@ function chipClass(label: string) {
 }
 
 export default function Home() {
+  const { items: trending } = useRecipes({ limit: 8 }, trendingFallback);
+  const { items: plantBased } = useRecipes({ diet: 'vegana', limit: 3 }, plantFallback);
+
   return (
     <>
       {/* HERO */}
@@ -134,7 +138,7 @@ export default function Home() {
           {categories.map((c) => (
             <Link
               key={c.name}
-              to="/recipes"
+              to={'slug' in c ? `/recipes?category=${c.slug}` : '/recipes'}
               className={`relative flex min-h-[190px] flex-col justify-end overflow-hidden rounded-card p-6 ${c.cls}`}
             >
               <span className={`absolute -right-9 -top-9 h-[130px] w-[130px] rounded-full ${c.dot}`} />
