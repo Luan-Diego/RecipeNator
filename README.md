@@ -11,7 +11,7 @@ Em dois terminais, a partir da pasta do projeto:
 ```bash
 # 1) API
 cd server
-cp .env.example .env     # ajuste MONGODB_URI se necessário
+cp .env.example .env     # ajuste MONGODB_URI e preencha JWT_SECRET (o comando para gerar está no arquivo)
 npm install
 npm run dev              # http://localhost:4000/api/health
 
@@ -40,6 +40,14 @@ Observações:
 - As receitas importadas estão **em inglês** (`language: "en"`); categorias e culinárias já são mapeadas
   para o português (`server/src/config/categories.ts`).
 - As fotos são usadas pela URL da origem (não copiadas para o Cloudinary).
+
+## Contas e login
+
+- `POST /api/auth/register`, `POST /api/auth/login`, `POST /api/auth/logout`, `GET /api/auth/me`.
+- Senhas com hash (bcrypt) e sessão em cookie `httpOnly` (7 dias); o JavaScript da página não lê o token.
+- Tentativas de login/cadastro limitadas a 20 a cada 15 minutos por IP.
+- Em produção com site e API em domínios diferentes, será preciso ajustar o cookie (`sameSite`) e o CORS.
+- Para proteger uma página no site, envolva-a em `<ProtectedRoute>`; para proteger uma rota da API, use `requireAuth`.
 
 ## Identidade visual
 

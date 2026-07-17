@@ -1,4 +1,5 @@
 import { Link, NavLink } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 import Logo from './Logo';
 
 const links = [
@@ -9,6 +10,8 @@ const links = [
 ];
 
 export default function Navbar() {
+  const { user, loading, logout } = useAuth();
+
   return (
     <header className="border-b border-line">
       <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-x-9 gap-y-3 px-5 py-3 sm:px-10">
@@ -25,9 +28,19 @@ export default function Navbar() {
           ))}
         </nav>
         <div className="flex items-center gap-3">
-          <Link to="/login" className="px-2 py-3 font-semibold hover:text-tomato">
-            Entrar
-          </Link>
+          {!loading && user && (
+            <>
+              <span className="hidden px-2 font-semibold sm:inline">Olá, {user.name.split(' ')[0]}</span>
+              <button type="button" onClick={() => void logout()} className="px-2 py-3 font-semibold hover:text-tomato">
+                Sair
+              </button>
+            </>
+          )}
+          {!loading && !user && (
+            <Link to="/login" className="px-2 py-3 font-semibold hover:text-tomato">
+              Entrar
+            </Link>
+          )}
           <Link to="/create-recipe" className="btn-dark">
             Publicar receita
           </Link>
