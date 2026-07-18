@@ -49,6 +49,13 @@ Observações:
 - Em produção com site e API em domínios diferentes, será preciso ajustar o cookie (`sameSite`) e o CORS.
 - Para proteger uma página no site, envolva-a em `<ProtectedRoute>`; para proteger uma rota da API, use `requireAuth`.
 
+## Favoritos e publicação de receitas
+
+- `GET /api/favorites`, `POST /api/favorites/:recipeId`, `DELETE /api/favorites/:recipeId` (exigem login).
+- `POST /api/recipes` publica uma receita (exige login, limite de 20 por hora por IP). Sem foto por enquanto:
+  o upload entra com o Cloudinary.
+- No site: `/favorites` e `/create-recipe` (ambas protegidas), coração nos cards e na página da receita.
+
 ## Identidade visual
 
 - Cores definidas em `client/tailwind.config.js` (tomate, açafrão, páprica, café torrado, creme).

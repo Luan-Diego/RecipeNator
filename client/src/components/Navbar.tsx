@@ -30,6 +30,9 @@ export default function Navbar() {
         <div className="flex items-center gap-3">
           {!loading && user && (
             <>
+              <Link to="/favorites" className="px-2 py-3 font-semibold hover:text-tomato">
+                Favoritos
+              </Link>
               <span className="hidden px-2 font-semibold sm:inline">Olá, {user.name.split(' ')[0]}</span>
               <button type="button" onClick={() => void logout()} className="px-2 py-3 font-semibold hover:text-tomato">
                 Sair

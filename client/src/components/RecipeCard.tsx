@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import type { Diet, RecipeCardData } from '../types';
+import HeartButton from './HeartButton';
 import PlateIllustration from './PlateIllustration';
 
 const dietBadge: Record<Diet, { label: string; cls: string }> = {
@@ -17,6 +18,7 @@ type Props = {
 export default function RecipeCard({ recipe, plant = false }: Props) {
   const badge = recipe.diet ? dietBadge[recipe.diet] : null;
   const hasStats = recipe.time || recipe.level || recipe.rating;
+  const showHeart = !plant || Boolean(recipe.slug);
 
   return (
     <article
@@ -47,16 +49,12 @@ export default function RecipeCard({ recipe, plant = false }: Props) {
             {badge.label}
           </span>
         )}
-        {!plant && (
-          <button
-            type="button"
-            aria-label="Salvar receita"
+        {showHeart && (
+          <HeartButton
+            recipeId={recipe.id}
+            enabled={Boolean(recipe.slug)}
             className="absolute right-3.5 top-3.5 z-10 flex h-11 w-11 items-center justify-center rounded-full bg-paper"
-          >
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2A1710" strokeWidth="2" strokeLinejoin="round" aria-hidden="true">
-              <path d="M12 20s-7-4.4-9-9.2C1.8 7.4 4 4.5 7 4.5c2 0 3.5 1.1 5 3 1.5-1.9 3-3 5-3 3 0 5.2 2.9 4 6.3C19 15.6 12 20 12 20z" />
-            </svg>
-          </button>
+          />
         )}
       </div>
       <div className="flex flex-col gap-2.5 px-5 pb-6 pt-5">

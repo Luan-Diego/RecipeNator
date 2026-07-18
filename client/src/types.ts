@@ -32,6 +32,8 @@ export type RecipeDetail = {
   language: string;
   source: string;
   sourceUrl?: string;
+  /** Só em receitas publicadas por usuários. */
+  author?: { name: string };
 };
 
 export type RecipePage = {

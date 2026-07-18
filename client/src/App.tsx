@@ -1,6 +1,9 @@
 import { Route, Routes } from 'react-router-dom';
 import Footer from './components/Footer';
 import Navbar from './components/Navbar';
+import ProtectedRoute from './components/ProtectedRoute';
+import CreateRecipe from './pages/CreateRecipe';
+import Favorites from './pages/Favorites';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import NotFound from './pages/NotFound';
@@ -18,9 +21,25 @@ export default function App() {
           <Route path="/recipes" element={<Recipes />} />
           <Route path="/search" element={<Recipes />} />
           <Route path="/recipes/:slug" element={<RecipeDetail />} />
+          <Route
+            path="/favorites"
+            element={
+              <ProtectedRoute>
+                <Favorites />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/create-recipe"
+            element={
+              <ProtectedRoute>
+                <CreateRecipe />
+              </ProtectedRoute>
+            }
+          />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          {/* Próximas rotas (documento, seção 10): /discover, /create-recipe (use <ProtectedRoute>), /meal-planner... */}
+          {/* Próximas rotas (documento, seção 10): /discover, /create-recipe /meal-planner, /calendar, /shopping-list... */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>

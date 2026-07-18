@@ -25,6 +25,7 @@ const recipeSchema = new Schema(
     sourceId: { type: String, required: true },
     sourceUrl: { type: String, default: '' },
     isImported: { type: Boolean, default: true },
+    author: { type: Schema.Types.ObjectId, ref: 'User' }, // só em receitas publicadas por usuários
   },
   { timestamps: true },
 );

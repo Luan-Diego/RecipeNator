@@ -6,6 +6,7 @@ const userSchema = new Schema(
     email: { type: String, required: true, unique: true, lowercase: true, trim: true },
     passwordHash: { type: String, required: true, select: false },
     role: { type: String, enum: ['user', 'admin'], default: 'user' },
+    favorites: [{ type: Schema.Types.ObjectId, ref: 'Recipe' }],
   },
   { timestamps: true },
 );

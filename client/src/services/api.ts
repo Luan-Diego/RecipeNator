@@ -49,6 +49,40 @@ function toCard(r: ApiRecipe, index: number, plant: boolean): RecipeCardData {
   };
 }
 
+/** Converte itens da API em dados de card (usado também pelos favoritos). */
+export function mapCards(items: ApiRecipe[], plant = false): RecipeCardData[] {
+  return items.map((r, i) => toCard(r, i, plant));
+}
+
+export type NewRecipe = {
+  title: string;
+  category: string;
+  cuisine?: string;
+  diets: ('vegetariana' | 'vegana')[];
+  tags: string[];
+  ingredients: { name: string; measure: string }[];
+  steps: string[];
+};
+
+/** Publica uma receita (exige login). Devolve o slug da nova receita. */
+export async function createRecipe(recipe: NewRecipe): Promise<{ slug: string }> {
+  const res = await fetch('/api/recipes', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(recipe),
+  });
+  const data = (await res.json().catch(() => ({}))) as {
+    slug?: string;
+    message?: string;
+    errors?: Record<string, string[]>;
+  };
+  if (!res.ok || !data.slug) {
+    const first = data.errors ? Object.values(data.errors).flat()[0] : undefined;
+    throw new Error(first ?? data.message ?? 'Não foi possível publicar a receita.');
+  }
+  return { slug: data.slug };
+}
+
 export async function fetchRecipePage(query: RecipeQuery = {}): Promise<RecipePage> {
   const params = new URLSearchParams();
   Object.entries(query).forEach(([k, v]) => {

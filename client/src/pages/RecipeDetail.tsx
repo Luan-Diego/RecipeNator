@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
+import HeartButton from '../components/HeartButton';
 import { categoryName, dietOf, fetchRecipe } from '../services/api';
 import type { RecipeDetail as Recipe } from '../types';
 import { scaleMeasure } from '../utils/scale';
@@ -96,17 +97,28 @@ export default function RecipeDetail() {
               ))}
             </ul>
           )}
-          <p className="max-w-md rounded-2xl bg-sand px-4 py-3 text-sm text-roast">
-            Receita importada em inglês. Fonte:{' '}
-            {recipe.sourceUrl ? (
-              <a href={recipe.sourceUrl} target="_blank" rel="noreferrer" className="font-semibold underline">
-                TheMealDB
-              </a>
-            ) : (
-              recipe.source
-            )}
-            .
-          </p>
+          <HeartButton
+            recipeId={recipe._id}
+            label="Salvar nos favoritos"
+            className="flex w-fit items-center gap-2 rounded-full border-[1.5px] border-espresso px-5 py-2.5"
+          />
+          {recipe.author ? (
+            <p className="text-cacau">
+              Receita de <span className="font-semibold text-espresso">{recipe.author.name}</span>
+            </p>
+          ) : (
+            <p className="max-w-md rounded-2xl bg-sand px-4 py-3 text-sm text-roast">
+              Receita importada em inglês. Fonte:{' '}
+              {recipe.sourceUrl ? (
+                <a href={recipe.sourceUrl} target="_blank" rel="noreferrer" className="font-semibold underline">
+                  TheMealDB
+                </a>
+              ) : (
+                recipe.source
+              )}
+              .
+            </p>
+          )}
         </div>
       </header>
 
