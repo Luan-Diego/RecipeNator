@@ -1,7 +1,8 @@
 import { Link } from 'react-router-dom';
 import RecipeCard from '../components/RecipeCard';
 import { Wordmark } from '../components/Logo';
-import { categories, dietFilters, events, plantBased as plantFallback, trending as trendingFallback } from '../data/sample';
+import { categories, dietFilters, plantBased as plantFallback, trending as trendingFallback } from '../data/sample';
+import { eventParts, recipesLink, upcomingEvents } from '../data/events';
 import { useRecipes } from '../hooks/useRecipes';
 
 const container = 'mx-auto max-w-7xl px-5 sm:px-10';
@@ -15,6 +16,13 @@ function chipClass(label: string) {
 export default function Home() {
   const { items: trending } = useRecipes({ limit: 8 }, trendingFallback);
   const { items: plantBased } = useRecipes({ diet: 'vegana', limit: 3 }, plantFallback);
+  // As 3 próximas datas a partir de hoje
+  const events = upcomingEvents(3).map((e, i) => ({
+    ...e,
+    ...eventParts(e),
+    color: i % 2 === 0 ? 'text-saffron' : 'text-paprika',
+    to: recipesLink(e.filter),
+  }));
 
   return (
     <>
@@ -165,15 +173,15 @@ export default function Home() {
           </div>
           <div className="grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-6">
             {events.map((v) => (
-              <div key={v.title} className="flex flex-col gap-3.5 rounded-card border border-roast bg-[#3A2218] p-8">
+              <div key={v.id} className="flex flex-col gap-3.5 rounded-card border border-roast bg-[#3A2218] p-8">
                 <div className="flex items-baseline gap-3">
                   <span className={`font-display text-[76px] font-semibold leading-[0.9] tracking-[-0.04em] ${v.color}`}>{v.day}</span>
-                  <span className="text-base font-bold uppercase tracking-[0.14em] text-[#E9C9A5]">{v.month}</span>
+                  <span className="text-base font-bold uppercase tracking-[0.14em] text-[#E9C9A5]">{v.monthShort}</span>
                 </div>
                 <h3 className="mt-2 text-[28px]">{v.title}</h3>
                 <div className="text-sm font-semibold uppercase tracking-[0.08em] text-[#E9C9A5]">{v.origin}</div>
                 <p className="text-[#E9C9A5]">{v.text}</p>
-                <Link to="/calendar" className="mt-2 font-semibold text-saffron">
+                <Link to={v.to} className="mt-2 font-semibold text-saffron">
                   Ver receitas da data →
                 </Link>
               </div>

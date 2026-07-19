@@ -26,6 +26,9 @@ const recipeSchema = new Schema(
     sourceUrl: { type: String, default: '' },
     isImported: { type: Boolean, default: true },
     author: { type: Schema.Types.ObjectId, ref: 'User' }, // só em receitas publicadas por usuários
+    // Resumo das avaliações (recalculado a cada avaliação criada, alterada ou removida)
+    ratingAvg: { type: Number, default: 0 },
+    ratingCount: { type: Number, default: 0 },
   },
   { timestamps: true },
 );

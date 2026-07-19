@@ -21,6 +21,8 @@ type ApiRecipe = {
   cuisine?: string;
   diets?: string[];
   imageUrl?: string;
+  ratingAvg?: number;
+  ratingCount?: number;
 };
 
 type ApiList = { items: ApiRecipe[]; page: number; limit: number; total: number };
@@ -45,6 +47,7 @@ function toCard(r: ApiRecipe, index: number, plant: boolean): RecipeCardData {
     meta: [r.cuisine, categoryName(r.category)].filter(Boolean).join(' · '),
     diet: dietOf(r.diets),
     imageUrl: r.imageUrl || undefined,
+    rating: r.ratingCount ? (r.ratingAvg ?? 0).toFixed(1).replace('.', ',') : undefined,
     bg: plant ? greenTint : warmTints[index % warmTints.length],
   };
 }

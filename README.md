@@ -56,6 +56,18 @@ Observações:
   o upload entra com o Cloudinary.
 - No site: `/favorites` e `/create-recipe` (ambas protegidas), coração nos cards e na página da receita.
 
+## Avaliações e comentários
+
+- `GET /api/recipes/:slug/reviews` (público), `PUT` (cria ou atualiza a sua avaliação) e `DELETE` (remove a sua), os dois últimos com login.
+- Uma avaliação por usuário em cada receita (nota de 1 a 5 e comentário opcional).
+- A média e a quantidade ficam guardadas na própria receita e aparecem nos cards.
+
+## Calendário gastronômico
+
+- Página `/calendar` (grade do mês + datas) e as 3 próximas datas na Home.
+- Dados em `client/src/data/events.ts` (2026 a jun/2027). Datas móveis já estão resolvidas; revise a lista a cada ano.
+  Mais adiante, a ideia é mover para o banco com um painel de admin.
+
 ## Identidade visual
 
 - Cores definidas em `client/tailwind.config.js` (tomate, açafrão, páprica, café torrado, creme).

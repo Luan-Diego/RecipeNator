@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import HeartButton from '../components/HeartButton';
+import Reviews from '../components/Reviews';
 import { categoryName, dietOf, fetchRecipe } from '../services/api';
 import type { RecipeDetail as Recipe } from '../types';
 import { scaleMeasure } from '../utils/scale';
@@ -201,6 +202,7 @@ export default function RecipeDetail() {
           </ol>
         </section>
       </div>
+      <Reviews slug={recipe.slug} />
     </article>
   );
 }

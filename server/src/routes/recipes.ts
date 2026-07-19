@@ -37,7 +37,7 @@ router.get(
 
     const [items, total] = await Promise.all([
       Recipe.find(filter)
-        .select('title slug category cuisine diets imageUrl source')
+        .select('title slug category cuisine diets imageUrl source ratingAvg ratingCount')
         .sort({ title: 1 })
         .skip((page - 1) * limit)
         .limit(limit)

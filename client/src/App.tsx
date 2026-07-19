@@ -2,6 +2,7 @@ import { Route, Routes } from 'react-router-dom';
 import Footer from './components/Footer';
 import Navbar from './components/Navbar';
 import ProtectedRoute from './components/ProtectedRoute';
+import Calendar from './pages/Calendar';
 import CreateRecipe from './pages/CreateRecipe';
 import Favorites from './pages/Favorites';
 import Home from './pages/Home';
@@ -37,9 +38,10 @@ export default function App() {
               </ProtectedRoute>
             }
           />
+          <Route path="/calendar" element={<Calendar />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          {/* Próximas rotas (documento, seção 10): /discover, /create-recipe /meal-planner, /calendar, /shopping-list... */}
+          {/* Próximas rotas (documento, seção 10): /discover, /create-recipe /meal-planner, /shopping-list... */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>

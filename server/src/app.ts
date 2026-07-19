@@ -8,6 +8,7 @@ import categoriesRouter from './routes/categories.js';
 import favoritesRouter from './routes/favorites.js';
 import healthRouter from './routes/health.js';
 import recipesRouter from './routes/recipes.js';
+import reviewsRouter from './routes/reviews.js';
 
 export const app = express();
 
@@ -18,10 +19,11 @@ app.use(cookieParser());
 
 app.use('/api/health', healthRouter);
 app.use('/api/auth', authRouter);
+app.use('/api/recipes', reviewsRouter); // /api/recipes/:slug/reviews
 app.use('/api/recipes', recipesRouter);
 app.use('/api/categories', categoriesRouter);
 app.use('/api/favorites', favoritesRouter);
-// Próximas rotas: /api/tags, comentários, planejador ...
+// Próximas rotas: /api/tags, planejador ...
 
 app.use((_req, res) => {
   res.status(404).json({ message: 'Rota não encontrada' });
