@@ -7,6 +7,7 @@ import authRouter from './routes/auth.js';
 import categoriesRouter from './routes/categories.js';
 import favoritesRouter from './routes/favorites.js';
 import healthRouter from './routes/health.js';
+import mealPlanRouter from './routes/mealPlan.js';
 import recipesRouter from './routes/recipes.js';
 import reviewsRouter from './routes/reviews.js';
 
@@ -23,7 +24,8 @@ app.use('/api/recipes', reviewsRouter); // /api/recipes/:slug/reviews
 app.use('/api/recipes', recipesRouter);
 app.use('/api/categories', categoriesRouter);
 app.use('/api/favorites', favoritesRouter);
-// Próximas rotas: /api/tags, planejador ...
+app.use('/api/meal-plan', mealPlanRouter);
+// Próximas rotas: /api/tags ...
 
 app.use((_req, res) => {
   res.status(404).json({ message: 'Rota não encontrada' });

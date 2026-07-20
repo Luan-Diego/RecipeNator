@@ -56,6 +56,13 @@ Observações:
   o upload entra com o Cloudinary.
 - No site: `/favorites` e `/create-recipe` (ambas protegidas), coração nos cards e na página da receita.
 
+## Planejador e lista de compras
+
+- `GET/PUT /api/meal-plan?week=AAAA-MM-DD` (exigem login; a semana é identificada pela data da segunda-feira).
+- Site: `/meal-planner` (7 dias x café, almoço e jantar, porções por receita, salva sozinho) e
+  `/shopping-list` (soma os ingredientes do plano, marca itens comprados, copia e imprime).
+- Quantidades só são somadas quando a unidade é a mesma; as receitas importadas trazem medidas em inglês.
+
 ## Avaliações e comentários
 
 - `GET /api/recipes/:slug/reviews` (público), `PUT` (cria ou atualiza a sua avaliação) e `DELETE` (remove a sua), os dois últimos com login.

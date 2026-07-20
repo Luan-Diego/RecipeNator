@@ -7,6 +7,8 @@ import CreateRecipe from './pages/CreateRecipe';
 import Favorites from './pages/Favorites';
 import Home from './pages/Home';
 import Login from './pages/Login';
+import MealPlanner from './pages/MealPlanner';
+import ShoppingList from './pages/ShoppingList';
 import NotFound from './pages/NotFound';
 import Register from './pages/Register';
 import RecipeDetail from './pages/RecipeDetail';
@@ -39,9 +41,25 @@ export default function App() {
             }
           />
           <Route path="/calendar" element={<Calendar />} />
+          <Route
+            path="/meal-planner"
+            element={
+              <ProtectedRoute>
+                <MealPlanner />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/shopping-list"
+            element={
+              <ProtectedRoute>
+                <ShoppingList />
+              </ProtectedRoute>
+            }
+          />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          {/* Próximas rotas (documento, seção 10): /discover, /create-recipe /meal-planner, /shopping-list... */}
+          {/* Próximas rotas (documento, seção 10): /discover, /create-recipe /costs... */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>

@@ -4,12 +4,10 @@ import HeartButton from '../components/HeartButton';
 import Reviews from '../components/Reviews';
 import { categoryName, dietOf, fetchRecipe } from '../services/api';
 import type { RecipeDetail as Recipe } from '../types';
-import { scaleMeasure } from '../utils/scale';
+import { BASE_SERVINGS, scaleMeasure } from '../utils/scale';
 import NotFound from './NotFound';
 
 const container = 'mx-auto max-w-7xl px-5 sm:px-10';
-/** As receitas importadas não informam porções; partimos de 4 e o usuário ajusta. */
-const BASE_SERVINGS = 4;
 
 export default function RecipeDetail() {
   const { slug = '' } = useParams();

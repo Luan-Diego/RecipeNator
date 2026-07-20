@@ -9,7 +9,7 @@ const columns = [
 
 export default function Footer() {
   return (
-    <footer className="bg-roast text-cream">
+    <footer className="bg-roast text-cream print:hidden">
       <div className="mx-auto flex max-w-7xl flex-col gap-10 px-5 pb-10 pt-16 sm:px-10">
         <div className="flex flex-wrap justify-between gap-10">
           <div className="flex max-w-xs flex-col items-start gap-3">

@@ -13,7 +13,7 @@ export default function Navbar() {
   const { user, loading, logout } = useAuth();
 
   return (
-    <header className="border-b border-line">
+    <header className="border-b border-line print:hidden">
       <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-x-9 gap-y-3 px-5 py-3 sm:px-10">
         <Logo />
         <nav aria-label="Principal" className="flex grow flex-wrap gap-x-7 gap-y-2 font-medium">
