@@ -30,10 +30,20 @@ type ApiList = { items: ApiRecipe[]; page: number; limit: number; total: number 
 export type RecipeQuery = {
   category?: string;
   diet?: 'vegetariana' | 'vegana';
+  cuisine?: string;
+  tag?: string;
   q?: string;
   page?: number;
   limit?: number;
 };
+
+export type Facet = { name: string; count: number };
+
+export async function fetchDiscover(): Promise<{ cuisines: Facet[]; tags: Facet[] }> {
+  const res = await fetch('/api/discover');
+  if (!res.ok) throw new Error(`API respondeu ${res.status}`);
+  return (await res.json()) as { cuisines: Facet[]; tags: Facet[] };
+}
 
 export function dietOf(diets: string[] = []): Diet | undefined {
   return diets.includes('vegana') ? 'vegana' : diets.includes('vegetariana') ? 'vegetariana' : undefined;

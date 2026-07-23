@@ -56,6 +56,13 @@ Observações:
   o upload entra com o Cloudinary.
 - No site: `/favorites` e `/create-recipe` (ambas protegidas), coração nos cards e na página da receita.
 
+## Explorar
+
+- `GET /api/discover` devolve culinárias e hashtags mais usadas (com contagem); `GET /api/recipes` aceita
+  também `cuisine` e `tag`.
+- Site: `/discover` (atalhos de estilo e categoria, culinárias do mundo, hashtags em alta) leva à biblioteca
+  já filtrada.
+
 ## Planejador e lista de compras
 
 - `GET/PUT /api/meal-plan?week=AAAA-MM-DD` (exigem login; a semana é identificada pela data da segunda-feira).

@@ -15,6 +15,8 @@ const categoryEnum = z.enum(categories.map((c) => c.slug) as [string, ...string[
 const listQuery = z.object({
   category: categoryEnum.optional(),
   diet: z.enum(['vegetariana', 'vegana']).optional(),
+  cuisine: z.string().trim().min(1).max(40).optional(),
+  tag: z.string().trim().min(1).max(30).optional(),
   q: z.string().trim().min(1).max(80).optional(),
   page: z.coerce.number().int().min(1).default(1),
   limit: z.coerce.number().int().min(1).max(48).default(12),
@@ -28,11 +30,13 @@ router.get(
     if (!parsed.success) {
       return res.status(400).json({ message: 'Parâmetros inválidos', errors: parsed.error.flatten().fieldErrors });
     }
-    const { category, diet, q, page, limit } = parsed.data;
+    const { category, diet, cuisine, tag, q, page, limit } = parsed.data;
 
     const filter: Record<string, unknown> = {};
     if (category) filter.category = category;
     if (diet) filter.diets = diet;
+    if (cuisine) filter.cuisine = cuisine;
+    if (tag) filter.tags = tag.replace(/^#/, '').toLowerCase();
     if (q) filter.$text = { $search: q };
 
     const [items, total] = await Promise.all([

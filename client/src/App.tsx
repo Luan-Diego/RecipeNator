@@ -4,6 +4,7 @@ import Navbar from './components/Navbar';
 import ProtectedRoute from './components/ProtectedRoute';
 import Calendar from './pages/Calendar';
 import CreateRecipe from './pages/CreateRecipe';
+import Discover from './pages/Discover';
 import Favorites from './pages/Favorites';
 import Home from './pages/Home';
 import Login from './pages/Login';
@@ -40,6 +41,7 @@ export default function App() {
               </ProtectedRoute>
             }
           />
+          <Route path="/discover" element={<Discover />} />
           <Route path="/calendar" element={<Calendar />} />
           <Route
             path="/meal-planner"
@@ -59,7 +61,7 @@ export default function App() {
           />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          {/* Próximas rotas (documento, seção 10): /discover, /create-recipe /costs... */}
+          {/* Próximas rotas (documento, seção 10): /discover, /create-recipe /costs, painel de admin... */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
