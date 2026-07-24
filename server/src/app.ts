@@ -11,6 +11,7 @@ import healthRouter from './routes/health.js';
 import mealPlanRouter from './routes/mealPlan.js';
 import recipesRouter from './routes/recipes.js';
 import reviewsRouter from './routes/reviews.js';
+import uploadsRouter from './routes/uploads.js';
 
 export const app = express();
 
@@ -24,6 +25,7 @@ app.use('/api/auth', authRouter);
 app.use('/api/recipes', reviewsRouter); // /api/recipes/:slug/reviews
 app.use('/api/recipes', recipesRouter);
 app.use('/api/categories', categoriesRouter);
+app.use('/api/uploads', uploadsRouter);
 app.use('/api/discover', discoverRouter);
 app.use('/api/favorites', favoritesRouter);
 app.use('/api/meal-plan', mealPlanRouter);

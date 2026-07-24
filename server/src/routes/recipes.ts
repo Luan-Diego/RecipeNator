@@ -3,6 +3,7 @@ import rateLimit from 'express-rate-limit';
 import mongoose from 'mongoose';
 import { z } from 'zod';
 import { categories } from '../config/categories.js';
+import { isAllowedImageUrl } from '../config/cloudinary.js';
 import { requireAuth } from '../middleware/requireAuth.js';
 import { Recipe } from '../models/Recipe.js';
 import { asyncHandler } from '../utils/asyncHandler.js';
@@ -68,6 +69,7 @@ const createSchema = z.object({
     )
     .min(1, 'Adicione pelo menos um ingrediente')
     .max(40),
+  imageUrl: z.string().url().max(500).optional(),
   steps: z.array(z.string().trim().min(1, 'Preencha todos os passos').max(1000)).min(1, 'Adicione pelo menos um passo').max(40),
 });
 
@@ -92,6 +94,10 @@ router.post(
     }
     const data = parsed.data;
 
+    if (data.imageUrl && !isAllowedImageUrl(data.imageUrl)) {
+      return res.status(400).json({ message: 'A foto precisa ter sido enviada pelo próprio RecipeNator' });
+    }
+
     // Receita vegana também é vegetariana
     const diets = [...new Set(data.diets.includes('vegana') ? [...data.diets, 'vegetariana'] : data.diets)];
     const tags = [...new Set(data.tags.map((t) => t.replace(/^#/, '').toLowerCase()).filter(Boolean))];
@@ -111,6 +117,7 @@ router.post(
       tags,
       ingredients: data.ingredients,
       steps: data.steps,
+      imageUrl: data.imageUrl ?? '',
       language: 'pt',
       source: 'user',
       sourceId: new mongoose.Types.ObjectId().toString(),

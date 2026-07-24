@@ -4,6 +4,7 @@ import HeartButton from '../components/HeartButton';
 import Reviews from '../components/Reviews';
 import { categoryName, dietOf, fetchRecipe } from '../services/api';
 import type { RecipeDetail as Recipe } from '../types';
+import { optimizeImage } from '../utils/image';
 import { BASE_SERVINGS, scaleMeasure } from '../utils/scale';
 import NotFound from './NotFound';
 
@@ -73,7 +74,7 @@ export default function RecipeDetail() {
       <header className="flex flex-wrap items-center gap-10">
         <div className="relative aspect-[4/3] min-w-0 flex-[1_1_420px] overflow-hidden rounded-card bg-sand">
           {recipe.imageUrl && (
-            <img src={recipe.imageUrl} alt={recipe.title} className="absolute inset-0 h-full w-full object-cover" />
+            <img src={optimizeImage(recipe.imageUrl, 'detail')} alt={recipe.title} className="absolute inset-0 h-full w-full object-cover" />
           )}
         </div>
         <div className="flex min-w-0 flex-[1_1_380px] flex-col gap-5">

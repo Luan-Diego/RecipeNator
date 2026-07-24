@@ -56,6 +56,15 @@ Observações:
   o upload entra com o Cloudinary.
 - No site: `/favorites` e `/create-recipe` (ambas protegidas), coração nos cards e na página da receita.
 
+## Fotos das receitas (Cloudinary)
+
+- Opcional: crie uma conta gratuita em cloudinary.com e preencha `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY` e
+  `CLOUDINARY_API_SECRET` no `server/.env`. Sem isso, o campo de foto some do formulário.
+- O navegador envia a foto direto ao Cloudinary com uma assinatura temporária gerada em `GET /api/uploads/signature`
+  (exige login; só JPG, PNG e WebP na pasta `recipenator/recipes`). O segredo nunca sai do servidor.
+- `POST /api/recipes` só aceita fotos que estejam na sua conta do Cloudinary.
+- Nos cards e na página, as fotos são servidas recortadas e otimizadas pelo próprio Cloudinary.
+
 ## Explorar
 
 - `GET /api/discover` devolve culinárias e hashtags mais usadas (com contagem); `GET /api/recipes` aceita

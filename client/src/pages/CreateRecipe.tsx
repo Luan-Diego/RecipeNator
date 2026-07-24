@@ -1,6 +1,7 @@
-import { useState, type FormEvent } from 'react';
+import { useEffect, useState, type FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { categoryList, createRecipe } from '../services/api';
+import { MAX_PHOTO_BYTES, PHOTO_TYPES, uploadPhoto, uploadsEnabled } from '../services/uploads';
 import { fieldClass } from './Login';
 
 type Ingredient = { name: string; measure: string };
@@ -17,6 +18,38 @@ export default function CreateRecipe() {
   const [steps, setSteps] = useState<string[]>(['']);
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
+  const [photoEnabled, setPhotoEnabled] = useState(false);
+  const [photo, setPhoto] = useState<File | null>(null);
+  const [preview, setPreview] = useState('');
+  const [stage, setStage] = useState<'upload' | 'publish' | null>(null);
+
+  useEffect(() => {
+    void uploadsEnabled().then(setPhotoEnabled);
+  }, []);
+
+  // Pré-visualização da foto escolhida (libera a memória ao trocar ou sair)
+  useEffect(() => {
+    if (!photo) {
+      setPreview('');
+      return;
+    }
+    const url = URL.createObjectURL(photo);
+    setPreview(url);
+    return () => URL.revokeObjectURL(url);
+  }, [photo]);
+
+  function onPickPhoto(file: File | null) {
+    setError('');
+    if (file && !PHOTO_TYPES.includes(file.type)) {
+      setError('Use uma foto JPG, PNG ou WebP.');
+      return;
+    }
+    if (file && file.size > MAX_PHOTO_BYTES) {
+      setError('A foto pode ter no máximo 5 MB.');
+      return;
+    }
+    setPhoto(file);
+  }
 
   const setIngredient = (i: number, patch: Partial<Ingredient>) =>
     setIngredients((list) => list.map((x, idx) => (idx === i ? { ...x, ...patch } : x)));
@@ -27,7 +60,14 @@ export default function CreateRecipe() {
     setError('');
     setBusy(true);
     try {
+      let imageUrl: string | undefined;
+      if (photo) {
+        setStage('upload');
+        imageUrl = await uploadPhoto(photo);
+      }
+      setStage('publish');
       const { slug } = await createRecipe({
+        imageUrl,
         title,
         category,
         cuisine: cuisine.trim() || undefined,
@@ -44,6 +84,7 @@ export default function CreateRecipe() {
       setError(err instanceof Error ? err.message : 'Não foi possível publicar a receita.');
     } finally {
       setBusy(false);
+      setStage(null);
     }
   }
 
@@ -53,11 +94,33 @@ export default function CreateRecipe() {
     <section className="mx-auto max-w-3xl px-5 py-14">
       <div className="eyebrow">Compartilhe</div>
       <h1 className="mt-1.5 text-5xl leading-[1.05] tracking-[-0.03em]">Publicar receita</h1>
-      <p className="mt-3 text-cacau">
-        Conte como você prepara. A foto da receita ainda não pode ser enviada; o upload chega em uma próxima etapa.
-      </p>
+      <p className="mt-3 text-cacau">Conte como você prepara e, se quiser, acompanhe com uma foto.</p>
 
       <form onSubmit={onSubmit} className="mt-8 flex flex-col gap-8">
+        {photoEnabled && (
+          <div className="flex flex-col gap-4 rounded-card border border-line bg-paper p-7">
+            <h2 className="text-3xl tracking-[-0.02em]">Foto</h2>
+            {preview && (
+              <img src={preview} alt="Pré-visualização da foto escolhida" className="aspect-[4/3] w-full max-w-md rounded-card object-cover" />
+            )}
+            <label className="flex flex-col gap-1.5 font-semibold">
+              {photo ? 'Trocar foto' : 'Escolher foto (opcional)'}
+              <input
+                type="file"
+                accept="image/jpeg,image/png,image/webp"
+                onChange={(e) => onPickPhoto(e.target.files?.[0] ?? null)}
+                className="text-base font-normal file:mr-4 file:cursor-pointer file:rounded-full file:border-0 file:bg-espresso file:px-5 file:py-2.5 file:font-semibold file:text-cream"
+              />
+              <span className="text-sm font-normal text-cacau">JPG, PNG ou WebP, até 5 MB.</span>
+            </label>
+            {photo && (
+              <button type="button" onClick={() => setPhoto(null)} className="w-fit font-semibold text-tomato underline">
+                Remover foto
+              </button>
+            )}
+          </div>
+        )}
+
         <div className="flex flex-col gap-5 rounded-card border border-line bg-paper p-7">
           <label className="flex flex-col gap-1.5 font-semibold">
             Título
@@ -206,7 +269,7 @@ export default function CreateRecipe() {
           {error}
         </p>
         <button type="submit" disabled={busy} className="btn-primary self-start disabled:opacity-60">
-          {busy ? 'Publicando…' : 'Publicar receita'}
+          {stage === 'upload' ? 'Enviando foto…' : busy ? 'Publicando…' : 'Publicar receita'}
         </button>
       </form>
     </section>

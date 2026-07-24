@@ -1,4 +1,5 @@
 import type { Diet, RecipeCardData, RecipeDetail, RecipePage } from '../types';
+import { optimizeImage } from '../utils/image';
 
 export const categoryList = [
   { slug: 'doces-e-sobremesas', name: 'Doces e sobremesas' },
@@ -56,7 +57,7 @@ function toCard(r: ApiRecipe, index: number, plant: boolean): RecipeCardData {
     title: r.title,
     meta: [r.cuisine, categoryName(r.category)].filter(Boolean).join(' · '),
     diet: dietOf(r.diets),
-    imageUrl: r.imageUrl || undefined,
+    imageUrl: r.imageUrl ? optimizeImage(r.imageUrl) : undefined,
     rating: r.ratingCount ? (r.ratingAvg ?? 0).toFixed(1).replace('.', ',') : undefined,
     bg: plant ? greenTint : warmTints[index % warmTints.length],
   };
@@ -75,6 +76,7 @@ export type NewRecipe = {
   tags: string[];
   ingredients: { name: string; measure: string }[];
   steps: string[];
+  imageUrl?: string;
 };
 
 /** Publica uma receita (exige login). Devolve o slug da nova receita. */
