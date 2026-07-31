@@ -19,6 +19,8 @@ const recipeSchema = new Schema(
     ingredients: { type: [ingredientSchema], default: [] },
     steps: { type: [String], default: [] },
     imageUrl: { type: String, default: '' }, // URL da fonte (hotlink); não guardamos o arquivo
+    imageCredit: { type: String, default: '' }, // nome do fotógrafo (fotos do Pexels)
+    imageCreditUrl: { type: String, default: '' }, // página da foto, para o crédito
     language: { type: String, default: 'en' }, // as receitas importadas vêm em inglês
     // Origem do conteúdo
     source: { type: String, required: true }, // ex.: 'themealdb'
@@ -27,6 +29,9 @@ const recipeSchema = new Schema(
     isImported: { type: Boolean, default: true },
     author: { type: Schema.Types.ObjectId, ref: 'User' }, // só em receitas publicadas por usuários
     // Resumo das avaliações (recalculado a cada avaliação criada, alterada ou removida)
+    // Destaque na Home ("Escolhas do RecipeNator"); menor número aparece primeiro
+    featured: { type: Boolean, default: false, index: true },
+    featuredOrder: { type: Number, default: 0 },
     ratingAvg: { type: Number, default: 0 },
     ratingCount: { type: Number, default: 0 },
   },

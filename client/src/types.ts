@@ -29,6 +29,9 @@ export type RecipeDetail = {
   ingredients: { name: string; measure: string }[];
   steps: string[];
   imageUrl?: string;
+  /** Crédito da foto (fotos do Pexels). */
+  imageCredit?: string;
+  imageCreditUrl?: string;
   language: string;
   source: string;
   sourceUrl?: string;

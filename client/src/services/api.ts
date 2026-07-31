@@ -1,5 +1,6 @@
 import type { Diet, RecipeCardData, RecipeDetail, RecipePage } from '../types';
 import { optimizeImage } from '../utils/image';
+import { plateFor } from '../utils/plate';
 
 export const categoryList = [
   { slug: 'doces-e-sobremesas', name: 'Doces e sobremesas' },
@@ -34,6 +35,8 @@ export type RecipeQuery = {
   cuisine?: string;
   tag?: string;
   q?: string;
+  featured?: boolean;
+  sort?: 'title' | 'recent' | 'featured';
   page?: number;
   limit?: number;
 };
@@ -51,13 +54,15 @@ export function dietOf(diets: string[] = []): Diet | undefined {
 }
 
 function toCard(r: ApiRecipe, index: number, plant: boolean): RecipeCardData {
+  const diet = dietOf(r.diets);
   return {
     id: r._id,
     slug: r.slug,
     title: r.title,
     meta: [r.cuisine, categoryName(r.category)].filter(Boolean).join(' · '),
-    diet: dietOf(r.diets),
+    diet,
     imageUrl: r.imageUrl ? optimizeImage(r.imageUrl) : undefined,
+    plate: r.imageUrl ? undefined : plateFor(r.slug, diet, r.category),
     rating: r.ratingCount ? (r.ratingAvg ?? 0).toFixed(1).replace('.', ',') : undefined,
     bg: plant ? greenTint : warmTints[index % warmTints.length],
   };

@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import HeartButton from '../components/HeartButton';
+import PlateIllustration from '../components/PlateIllustration';
 import Reviews from '../components/Reviews';
 import { categoryName, dietOf, fetchRecipe } from '../services/api';
 import type { RecipeDetail as Recipe } from '../types';
 import { optimizeImage } from '../utils/image';
+import { plateFor } from '../utils/plate';
 import { BASE_SERVINGS, scaleMeasure } from '../utils/scale';
 import NotFound from './NotFound';
 
@@ -72,10 +74,31 @@ export default function RecipeDetail() {
       </nav>
 
       <header className="flex flex-wrap items-center gap-10">
-        <div className="relative aspect-[4/3] min-w-0 flex-[1_1_420px] overflow-hidden rounded-card bg-sand">
-          {recipe.imageUrl && (
+        <div className="min-w-0 flex-[1_1_420px]">
+        <div className="relative aspect-[4/3] overflow-hidden rounded-card bg-sand">
+          {recipe.imageUrl ? (
             <img src={optimizeImage(recipe.imageUrl, 'detail')} alt={recipe.title} className="absolute inset-0 h-full w-full object-cover" />
+          ) : (
+            <div className="absolute inset-0 flex items-center justify-center p-10">
+              <div className="aspect-square h-full max-h-full">
+                <PlateIllustration {...plateFor(recipe.slug, diet, recipe.category)} />
+              </div>
+            </div>
           )}
+        </div>
+        {recipe.imageUrl && recipe.imageCredit && (
+          <p className="mt-2 text-[13px] text-cacau">
+            Foto de{' '}
+            {recipe.imageCreditUrl ? (
+              <a href={recipe.imageCreditUrl} target="_blank" rel="noreferrer" className="underline">
+                {recipe.imageCredit}
+              </a>
+            ) : (
+              recipe.imageCredit
+            )}{' '}
+            no Pexels
+          </p>
+        )}
         </div>
         <div className="flex min-w-0 flex-[1_1_380px] flex-col gap-5">
           <div className="flex flex-wrap gap-2">
@@ -102,7 +125,11 @@ export default function RecipeDetail() {
             label="Salvar nos favoritos"
             className="flex w-fit items-center gap-2 rounded-full border-[1.5px] border-espresso px-5 py-2.5"
           />
-          {recipe.author ? (
+          {recipe.source === 'recipenator' ? (
+            <p className="text-cacau">
+              Receita da casa · <span className="font-semibold text-espresso">Seleção do RecipeNator</span>
+            </p>
+          ) : recipe.author ? (
             <p className="text-cacau">
               Receita de <span className="font-semibold text-espresso">{recipe.author.name}</span>
             </p>

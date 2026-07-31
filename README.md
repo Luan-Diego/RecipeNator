@@ -21,6 +21,17 @@ npm install
 npm run dev              # http://localhost:5173
 ```
 
+## Receitas da casa e destaques
+
+- O site já nasce com receitas: 14 receitas em português (`server/src/data/curatedRecipes.ts`) entram no banco
+  sozinhas quando o servidor inicia. Rodar de novo só atualiza o texto; não mexe em foto, destaque nem avaliações.
+- Para carregar manualmente: `npm run seed` (em `server/`). Para desligar a carga automática: `SEED_CURATED=false` no `.env`.
+- As 8 marcadas com `featured: true` formam a seção **Escolhas do RecipeNator** na Home (ordem em `featuredOrder`)
+  e a lista `/recipes?featured=true`. A API aceita `?featured=true|false` e `?sort=title|recent|featured`.
+- Receitas sem foto mostram um prato ilustrado (verde só para vegetarianas e veganas).
+- Explicação do Cloudinary em linguagem simples: `docs/cloudinary.md`.
+- Fotos reais para as receitas da casa (Pexels + Cloudinary): `npm run photos`, veja `docs/fotos.md`.
+
 ## Receitas da TheMealDB (API gratuita)
 
 Com a API e o MongoDB rodando, importe algumas receitas por categoria:

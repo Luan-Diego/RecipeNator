@@ -7,6 +7,8 @@
     "dev": "tsx watch src/index.ts",
     "build": "tsc",
     "start": "node dist/index.js",
+    "seed": "tsx src/scripts/seed.ts",
+    "photos": "tsx src/scripts/photos.ts",
     "import:mealdb": "tsx src/scripts/importMealDb.ts"
   },
   "dependencies": {

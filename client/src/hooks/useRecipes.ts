@@ -15,7 +15,7 @@ export function useRecipes(query: RecipeQuery, fallback: RecipeCardData[]) {
     let cancelled = false;
     fetchRecipes(JSON.parse(key) as RecipeQuery)
       .then((result) => {
-        if (!cancelled && result.length > 0) {
+        if (!cancelled) {
           setItems(result);
           setLive(true);
         }

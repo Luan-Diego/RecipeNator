@@ -14,7 +14,8 @@ function chipClass(label: string) {
 }
 
 export default function Home() {
-  const { items: trending } = useRecipes({ limit: 8 }, trendingFallback);
+  const { items: picks } = useRecipes({ featured: true, sort: 'featured', limit: 6 }, trendingFallback.slice(0, 6));
+  const { items: trending } = useRecipes({ featured: false, sort: 'recent', limit: 8 }, []);
   const { items: plantBased } = useRecipes({ diet: 'vegana', limit: 3 }, plantFallback);
   // As 3 próximas datas a partir de hoje
   const events = upcomingEvents(3).map((e, i) => ({
@@ -103,23 +104,53 @@ export default function Home() {
         </div>
       </section>
 
-      {/* EM ALTA */}
-      <section className={`${container} pb-10 pt-20`}>
-        <div className="mb-9 flex flex-wrap items-end justify-between gap-4">
-          <div>
-            <div className="eyebrow">Para você</div>
-            <h2 className="mt-1.5 text-5xl leading-[1.05] tracking-[-0.03em]">Em alta na cozinha</h2>
+      {/* ESCOLHAS DO RECIPENATOR */}
+      {picks.length > 0 && (
+        <section className="bg-sand">
+          <div className={`${container} py-20`}>
+            <div className="mb-9 flex flex-wrap items-end justify-between gap-4">
+              <div className="flex items-center gap-5">
+                <img src="/mascot.png" alt="" aria-hidden="true" className="h-20 w-20 shrink-0 object-contain" />
+                <div>
+                  <div className="eyebrow">Seleção da casa</div>
+                  <h2 className="mt-1.5 text-5xl leading-[1.05] tracking-[-0.03em]">Escolhas do RecipeNator</h2>
+                  <p className="mt-2 max-w-[560px] text-cacau">
+                    Receitas testadas e escolhidas pela casa para você começar a cozinhar hoje.
+                  </p>
+                </div>
+              </div>
+              <Link to="/recipes?featured=true" className="border-b-2 border-tomato pb-0.5 font-semibold">
+                Ver todas as recomendadas
+              </Link>
+            </div>
+            <div className="grid grid-cols-[repeat(auto-fill,minmax(260px,1fr))] gap-7">
+              {picks.map((r) => (
+                <RecipeCard key={r.id} recipe={r} />
+              ))}
+            </div>
           </div>
-          <Link to="/recipes" className="border-b-2 border-tomato pb-0.5 font-semibold">
-            Ver todas as receitas
-          </Link>
-        </div>
-        <div className="grid grid-cols-[repeat(auto-fill,minmax(260px,1fr))] gap-7">
-          {trending.map((r) => (
-            <RecipeCard key={r.id} recipe={r} />
-          ))}
-        </div>
-      </section>
+        </section>
+      )}
+
+      {/* NOVIDADES */}
+      {trending.length > 0 && (
+        <section className={`${container} pb-10 pt-20`}>
+          <div className="mb-9 flex flex-wrap items-end justify-between gap-4">
+            <div>
+              <div className="eyebrow">Recém-chegadas</div>
+              <h2 className="mt-1.5 text-5xl leading-[1.05] tracking-[-0.03em]">Novidades na cozinha</h2>
+            </div>
+            <Link to="/recipes" className="border-b-2 border-tomato pb-0.5 font-semibold">
+              Ver todas as receitas
+            </Link>
+          </div>
+          <div className="grid grid-cols-[repeat(auto-fill,minmax(260px,1fr))] gap-7">
+            {trending.map((r) => (
+              <RecipeCard key={r.id} recipe={r} />
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* ANÚNCIO (exemplo) */}
       <section className={`${container} pb-16 pt-4`}>

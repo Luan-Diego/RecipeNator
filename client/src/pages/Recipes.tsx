@@ -18,6 +18,7 @@ export default function Recipes() {
   const q = params.get('q')?.trim() || undefined;
   const cuisine = params.get('cuisine')?.trim().slice(0, 40) || undefined;
   const tag = params.get('tag')?.trim().replace(/^#/, '').slice(0, 30) || undefined;
+  const featured = params.get('featured') === 'true' ? true : undefined;
   const page = Math.max(1, Number(params.get('page')) || 1);
 
   const [data, setData] = useState<RecipePage | null>(null);
@@ -30,13 +31,13 @@ export default function Recipes() {
     let cancelled = false;
     setData(null);
     setError(false);
-    fetchRecipePage({ category, diet, cuisine, tag, q, page, limit: LIMIT })
+    fetchRecipePage({ category, diet, cuisine, tag, q, featured, sort: featured ? 'featured' : undefined, page, limit: LIMIT })
       .then((r) => !cancelled && setData(r))
       .catch(() => !cancelled && setError(true));
     return () => {
       cancelled = true;
     };
-  }, [category, diet, cuisine, tag, q, page]);
+  }, [category, diet, cuisine, tag, q, featured, page]);
 
   function update(key: string, value: string | undefined) {
     const next = new URLSearchParams(params);
@@ -124,9 +125,15 @@ export default function Recipes() {
         </div>
       </div>
 
-      {(cuisine || tag) && (
+      {(cuisine || tag || featured) && (
         <div className="mt-5 flex flex-wrap items-center gap-2.5">
           <span className="mr-2 text-[15px] font-semibold">Filtrando por</span>
+          {featured && (
+            <button type="button" onClick={() => update('featured', undefined)} className="rounded-full bg-saffron px-4 py-2 text-[15px] font-semibold">
+              Seleção do RecipeNator <span aria-hidden="true">×</span>
+              <span className="sr-only">(remover filtro)</span>
+            </button>
+          )}
           {cuisine && (
             <button type="button" onClick={() => update('cuisine', undefined)} className="rounded-full bg-saffron px-4 py-2 text-[15px] font-semibold">
               Culinária {cuisine} <span aria-hidden="true">×</span>

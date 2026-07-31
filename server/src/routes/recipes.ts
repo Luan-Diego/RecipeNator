@@ -19,6 +19,8 @@ const listQuery = z.object({
   cuisine: z.string().trim().min(1).max(40).optional(),
   tag: z.string().trim().min(1).max(30).optional(),
   q: z.string().trim().min(1).max(80).optional(),
+  featured: z.enum(['true', 'false']).optional(),
+  sort: z.enum(['title', 'recent', 'featured']).default('title'),
   page: z.coerce.number().int().min(1).default(1),
   limit: z.coerce.number().int().min(1).max(48).default(12),
 });
@@ -31,7 +33,7 @@ router.get(
     if (!parsed.success) {
       return res.status(400).json({ message: 'Parâmetros inválidos', errors: parsed.error.flatten().fieldErrors });
     }
-    const { category, diet, cuisine, tag, q, page, limit } = parsed.data;
+    const { category, diet, cuisine, tag, q, featured, sort, page, limit } = parsed.data;
 
     const filter: Record<string, unknown> = {};
     if (category) filter.category = category;
@@ -39,11 +41,16 @@ router.get(
     if (cuisine) filter.cuisine = cuisine;
     if (tag) filter.tags = tag.replace(/^#/, '').toLowerCase();
     if (q) filter.$text = { $search: q };
+    if (featured === 'true') filter.featured = true;
+    if (featured === 'false') filter.featured = { $ne: true };
+
+    const sortBy: Record<string, 1 | -1> =
+      sort === 'recent' ? { createdAt: -1, _id: -1 } : sort === 'featured' ? { featuredOrder: 1, title: 1 } : { title: 1 };
 
     const [items, total] = await Promise.all([
       Recipe.find(filter)
         .select('title slug category cuisine diets imageUrl source ratingAvg ratingCount')
-        .sort({ title: 1 })
+        .sort(sortBy)
         .skip((page - 1) * limit)
         .limit(limit)
         .lean(),
