@@ -33,6 +33,9 @@ export default function Navbar() {
               <Link to="/favorites" className="px-2 py-3 font-semibold hover:text-tomato">
                 Favoritos
               </Link>
+              <Link to="/collections" className="px-2 py-3 font-semibold hover:text-tomato">
+                Coleções
+              </Link>
               <span className="hidden px-2 font-semibold sm:inline">Olá, {user.name.split(' ')[0]}</span>
               <button type="button" onClick={() => void logout()} className="px-2 py-3 font-semibold hover:text-tomato">
                 Sair

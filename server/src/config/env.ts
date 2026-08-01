@@ -8,8 +8,8 @@ const schema = z.object({
   MONGODB_URI: z.string().min(1, 'MONGODB_URI é obrigatório'),
   // Carrega as receitas da casa ao iniciar o servidor (use 'false' para desligar)
   SEED_CURATED: z.enum(['true', 'false']).default('true'),
-  // Chave gratuita do Pexels (pexels.com/api), usada só pelo comando `npm run photos`
-  PEXELS_API_KEY: z.string().trim().optional(),
+  // Chave gratuita do Pixabay (pixabay.com), usada só pelo comando `npm run photos`
+  PIXABAY_API_KEY: z.string().trim().optional(),
   // Upload de fotos (opcional): preencha os três para ligar
   CLOUDINARY_CLOUD_NAME: z.string().trim().optional(),
   CLOUDINARY_API_KEY: z.string().trim().optional(),

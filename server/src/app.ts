@@ -5,6 +5,7 @@ import helmet from 'helmet';
 import { env } from './config/env.js';
 import authRouter from './routes/auth.js';
 import categoriesRouter from './routes/categories.js';
+import collectionsRouter from './routes/collections.js';
 import discoverRouter from './routes/discover.js';
 import favoritesRouter from './routes/favorites.js';
 import healthRouter from './routes/health.js';
@@ -28,6 +29,7 @@ app.use('/api/categories', categoriesRouter);
 app.use('/api/uploads', uploadsRouter);
 app.use('/api/discover', discoverRouter);
 app.use('/api/favorites', favoritesRouter);
+app.use('/api/collections', collectionsRouter);
 app.use('/api/meal-plan', mealPlanRouter);
 // Próximas rotas: /api/tags ...
 

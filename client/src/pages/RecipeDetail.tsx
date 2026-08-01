@@ -3,6 +3,8 @@ import { Link, useParams } from 'react-router-dom';
 import HeartButton from '../components/HeartButton';
 import PlateIllustration from '../components/PlateIllustration';
 import Reviews from '../components/Reviews';
+import SaveToCollection from '../components/SaveToCollection';
+import ShareButton from '../components/ShareButton';
 import { categoryName, dietOf, fetchRecipe } from '../services/api';
 import type { RecipeDetail as Recipe } from '../types';
 import { optimizeImage } from '../utils/image';
@@ -95,8 +97,7 @@ export default function RecipeDetail() {
               </a>
             ) : (
               recipe.imageCredit
-            )}{' '}
-            no Pexels
+            )}
           </p>
         )}
         </div>
@@ -120,11 +121,15 @@ export default function RecipeDetail() {
               ))}
             </ul>
           )}
-          <HeartButton
-            recipeId={recipe._id}
-            label="Salvar nos favoritos"
-            className="flex w-fit items-center gap-2 rounded-full border-[1.5px] border-espresso px-5 py-2.5"
-          />
+          <div className="flex flex-wrap gap-3 print:hidden">
+            <HeartButton
+              recipeId={recipe._id}
+              label="Salvar nos favoritos"
+              className="flex w-fit items-center gap-2 rounded-full border-[1.5px] border-espresso px-5 py-2.5"
+            />
+            <SaveToCollection recipeId={recipe._id} />
+            <ShareButton title={recipe.title} />
+          </div>
           {recipe.source === 'recipenator' ? (
             <p className="text-cacau">
               Receita da casa · <span className="font-semibold text-espresso">Seleção do RecipeNator</span>

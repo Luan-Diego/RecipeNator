@@ -19,7 +19,7 @@ const recipeSchema = new Schema(
     ingredients: { type: [ingredientSchema], default: [] },
     steps: { type: [String], default: [] },
     imageUrl: { type: String, default: '' }, // URL da fonte (hotlink); não guardamos o arquivo
-    imageCredit: { type: String, default: '' }, // nome do fotógrafo (fotos do Pexels)
+    imageCredit: { type: String, default: '' }, // nome do fotógrafo (fotos do Pixabay)
     imageCreditUrl: { type: String, default: '' }, // página da foto, para o crédito
     language: { type: String, default: 'en' }, // as receitas importadas vêm em inglês
     // Origem do conteúdo

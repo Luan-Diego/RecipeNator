@@ -1,12 +1,12 @@
 /**
- * Coloca fotos reais nas receitas da casa: busca no Pexels e guarda no seu Cloudinary.
+ * Coloca fotos reais nas receitas da casa: busca no Pixabay e guarda no seu Cloudinary.
  *
  *   npm run photos                       só as receitas que ainda não têm foto
  *   npm run photos -- --force            refaz todas
  *   npm run photos -- --only <slug>      só uma receita
  *   npm run photos -- --pick 2           usa o 2º resultado da busca em vez do 1º (1 a 5)
  *
- * Precisa de PEXELS_API_KEY e das três CLOUDINARY_* no server/.env.
+ * Precisa de PIXABAY_API_KEY e das três CLOUDINARY_* no server/.env.
  */
 import mongoose from 'mongoose';
 import { cloudinary } from '../config/cloudinary.js';
@@ -15,7 +15,7 @@ import { env } from '../config/env.js';
 import { photoQueries } from '../data/photoQueries.js';
 import { Recipe } from '../models/Recipe.js';
 import { uploadFromUrl } from '../services/cloudinaryUpload.js';
-import { searchPexels } from '../services/pexels.js';
+import { searchPhotos } from '../services/pixabay.js';
 
 const args = process.argv.slice(2);
 const force = args.includes('--force');
@@ -24,7 +24,7 @@ const pickArg = args.includes('--pick') ? Number(args[args.indexOf('--pick') + 1
 const pick = Number.isInteger(pickArg) && pickArg >= 1 && pickArg <= 5 ? pickArg : 1;
 
 async function main() {
-  if (!env.PEXELS_API_KEY) throw new Error('Falta PEXELS_API_KEY no server/.env (chave gratuita em pexels.com/api).');
+  if (!env.PIXABAY_API_KEY) throw new Error('Falta PIXABAY_API_KEY no server/.env (chave gratuita em pixabay.com).');
   if (!cloudinary) throw new Error('Faltam as variáveis CLOUDINARY_* no server/.env.');
 
   await connectDb();
@@ -40,7 +40,7 @@ async function main() {
     }
     const query = photoQueries[recipe.title] ?? recipe.title;
     try {
-      const results = await searchPexels(query, 5);
+      const results = await searchPhotos(query, 5);
       const photo = results[Math.min(pick, results.length) - 1];
       if (!photo) {
         console.log(`- ${recipe.slug}: nenhuma foto encontrada para "${query}"`);
@@ -49,10 +49,10 @@ async function main() {
       const url = await uploadFromUrl(photo.imageUrl, recipe.slug);
       await Recipe.updateOne(
         { _id: recipe._id },
-        { $set: { imageUrl: url, imageCredit: photo.photographer, imageCreditUrl: photo.pageUrl } },
+        { $set: { imageUrl: url, imageCredit: photo.credit, imageCreditUrl: photo.pageUrl } },
       );
       done++;
-      console.log(`✓ ${recipe.slug}: foto de ${photo.photographer}`);
+      console.log(`✓ ${recipe.slug}: foto de ${photo.credit}`);
     } catch (err) {
       console.error(`✗ ${recipe.slug}: ${(err as Error).message}`);
     }

@@ -1,5 +1,5 @@
 /**
- * Termos de busca de foto para cada receita da casa (em inglês, porque o Pexels acha mais resultados).
+ * Termos de busca de foto para cada receita da casa (em inglês, porque o Pixabay acha mais resultados).
  * A chave é o título da receita, igual ao de curatedRecipes.ts.
  * Se uma foto não ficar boa, ajuste o termo aqui e rode: npm run photos -- --only <slug> --force
  */

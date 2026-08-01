@@ -1,21 +1,21 @@
 # Fotos reais nas receitas da casa
 
 As receitas importadas da TheMealDB já trazem foto. Para as 14 receitas da casa, o comando `npm run photos`
-busca uma foto real de cada prato no **Pexels** (banco gratuito, uso comercial liberado) e a guarda na **sua conta
-do Cloudinary**. O nome do fotógrafo aparece como crédito na página da receita.
+busca uma foto real de cada prato no **Pixabay** (banco gratuito de fotos; as regras permitem baixar e guardar as imagens no seu próprio servidor, e pedem que se mostre a origem) e a guarda na **sua conta
+do Cloudinary**. O crédito ("Fulano no Pixabay") aparece na página da receita.
 
 ## O que você precisa (uma vez só)
 
 Acrescente estas linhas ao `server/.env`. As que já existem não mudam:
 
 ```
-PEXELS_API_KEY=sua-chave-do-pexels
+PIXABAY_API_KEY=sua-chave-do-pixabay
 CLOUDINARY_CLOUD_NAME=...
 CLOUDINARY_API_KEY=...
 CLOUDINARY_API_SECRET=...
 ```
 
-- Chave do Pexels: pexels.com/api, botão "Get Started", e é gratuita.
+- Chave do Pixabay: crie uma conta gratuita em pixabay.com, abra a página da API (pixabay.com/api/docs) logado e copie a chave que aparece lá.
 - Dados do Cloudinary: painel em cloudinary.com (veja `docs/cloudinary.md`).
 
 ## Como usar (na pasta `server`)

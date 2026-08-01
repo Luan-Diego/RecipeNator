@@ -3,6 +3,8 @@ import Footer from './components/Footer';
 import Navbar from './components/Navbar';
 import ProtectedRoute from './components/ProtectedRoute';
 import Calendar from './pages/Calendar';
+import CollectionDetail from './pages/CollectionDetail';
+import Collections from './pages/Collections';
 import CreateRecipe from './pages/CreateRecipe';
 import Discover from './pages/Discover';
 import Favorites from './pages/Favorites';
@@ -30,6 +32,22 @@ export default function App() {
             element={
               <ProtectedRoute>
                 <Favorites />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/collections"
+            element={
+              <ProtectedRoute>
+                <Collections />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/collections/:id"
+            element={
+              <ProtectedRoute>
+                <CollectionDetail />
               </ProtectedRoute>
             }
           />

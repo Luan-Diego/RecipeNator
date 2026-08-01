@@ -30,7 +30,16 @@ npm run dev              # http://localhost:5173
   e a lista `/recipes?featured=true`. A API aceita `?featured=true|false` e `?sort=title|recent|featured`.
 - Receitas sem foto mostram um prato ilustrado (verde só para vegetarianas e veganas).
 - Explicação do Cloudinary em linguagem simples: `docs/cloudinary.md`.
-- Fotos reais para as receitas da casa (Pexels + Cloudinary): `npm run photos`, veja `docs/fotos.md`.
+- Fotos reais para as receitas da casa (Pixabay + Cloudinary): `npm run photos`, veja `docs/fotos.md`.
+
+## Coleções e compartilhamento
+
+- `/collections` (exige login): crie coleções pessoais ("Jantares de semana", "Para o Natal") e abra cada uma em `/collections/:id`
+  para renomear, excluir ou remover receitas. Limites: 30 coleções por pessoa e 200 receitas por coleção.
+- Na página da receita: **Salvar em coleção** (marca e desmarca coleções, ou cria uma nova na hora) e **Compartilhar**
+  (copiar link, WhatsApp, menu de compartilhamento do aparelho e impressão).
+- API: `GET/POST /api/collections`, `GET/PATCH/DELETE /api/collections/:id`, `POST /api/collections/:id/recipes`,
+  `DELETE /api/collections/:id/recipes/:recipeId`.
 
 ## Receitas da TheMealDB (API gratuita)
 
