@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import RecipeCard from '../components/RecipeCard';
+import IngredientSearch from './IngredientSearch';
 import { categoryList, fetchRecipePage } from '../services/api';
 import type { RecipePage } from '../types';
 
@@ -11,7 +12,7 @@ type DietParam = 'vegetariana' | 'vegana';
 const isDiet = (v: string | null): v is DietParam => v === 'vegetariana' || v === 'vegana';
 
 /** Biblioteca de receitas. Também atende /search; filtros ficam na URL (compartilháveis). */
-export default function Recipes() {
+function RecipeLibrary() {
   const [params, setParams] = useSearchParams();
   const category = categoryList.some((c) => c.slug === params.get('category')) ? params.get('category')! : undefined;
   const diet = isDiet(params.get('diet')) ? (params.get('diet') as DietParam) : undefined;
@@ -201,4 +202,11 @@ export default function Recipes() {
       </div>
     </section>
   );
+}
+
+/** /recipes e /search. Com ?ingredients=..., mostra a busca por ingredientes. */
+export default function Recipes() {
+  const [params] = useSearchParams();
+  const ingredients = params.get('ingredients')?.trim().slice(0, 200);
+  return ingredients ? <IngredientSearch text={ingredients} /> : <RecipeLibrary />;
 }

@@ -61,6 +61,86 @@ router.get(
   }),
 );
 
+// ---------- Busca por ingredientes ----------
+
+const normalize = (s: string) =>
+  s
+    .normalize('NFD')
+    .replace(/[̀-ͯ]/g, '')
+    .toLowerCase()
+    .trim();
+
+const ACCENTS: Record<string, string> = { a: 'àáâãä', e: 'èéêë', i: 'ìíîï', o: 'òóôõö', u: 'ùúûü', c: 'ç', n: 'ñ' };
+
+/** Regex que ignora acentos e maiúsculas e casa a palavra inteira, com ou sem plural ("sal" não casa com "salsinha"). */
+function termRegex(term: string): RegExp {
+  const escaped = term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const body = escaped.replace(/[aeioucn]/g, (ch) => {
+    const variants = ACCENTS[ch] ?? '';
+    return `[${ch}${ch.toUpperCase()}${variants}${variants.toUpperCase()}]`;
+  });
+  return new RegExp(`(^|[\\s(/-])${body}(s|es)?(?=$|[\\s,.;)/-])`, 'i');
+}
+
+const STOPWORDS = new Set(['de', 'da', 'do', 'com', 'tenho', 'em', 'casa']);
+
+/** "Tenho frango, arroz e tomates" -> ['frango', 'arroz', 'tomate'] */
+function parseTerms(raw: string): string[] {
+  const cleaned = normalize(raw).replace(/\btenho\b|\bem casa\b/g, ' ');
+  let parts = cleaned
+    .split(/[,;\n+]+|\s+e\s+/)
+    .map((t) => t.replace(/[^a-z0-9\s-]/g, '').trim())
+    .filter(Boolean);
+  // "frango arroz tomate" (sem vírgulas): separa por palavra
+  if (parts.length === 1 && parts[0]!.includes(' ')) {
+    parts = parts[0]!.split(/\s+/).filter((w) => !STOPWORDS.has(w));
+  }
+  const singular = parts
+    .filter((t) => t.length >= 2 && t.length <= 30)
+    .map((t) => (t.length > 3 && t.endsWith('s') && !t.endsWith('ss') ? t.slice(0, -1) : t));
+  return [...new Set(singular)].slice(0, 10);
+}
+
+// Itens que se presume ter em casa: não contam como "faltando"
+const STAPLES = new Set(['sal', 'agua', 'oleo', 'azeite', 'pimenta', 'acucar', 'salt', 'water', 'oil', 'pepper', 'sugar']);
+const isStaple = (name: string) => normalize(name).split(/[^a-z]+/).some((w) => STAPLES.has(w));
+
+const byIngredientsQuery = z.object({
+  items: z.string().trim().min(1).max(200),
+  limit: z.coerce.number().int().min(1).max(48).default(24),
+});
+
+// GET /api/recipes/by-ingredients?items=frango,arroz,tomate
+// Ordena pelas receitas que usam mais dos seus ingredientes e que menos itens deixam faltando.
+router.get(
+  '/by-ingredients',
+  asyncHandler(async (req, res) => {
+    const parsed = byIngredientsQuery.safeParse(req.query);
+    if (!parsed.success) return res.status(400).json({ message: 'Informe ao menos um ingrediente' });
+    const terms = parseTerms(parsed.data.items);
+    if (terms.length === 0) return res.status(400).json({ message: 'Não entendi os ingredientes. Tente: frango, arroz, tomate' });
+
+    const regexes = terms.map(termRegex);
+    const docs = await Recipe.find({ 'ingredients.name': { $in: regexes } })
+      .select('title slug category cuisine diets imageUrl source ratingAvg ratingCount ingredients.name')
+      .limit(300)
+      .lean();
+
+    const scored = docs.map(({ ingredients, ...card }) => {
+      const names = ingredients.map((i) => i.name);
+      const matched = terms.filter((_, i) => names.some((n) => regexes[i]!.test(n)));
+      const needed = names.filter((n) => !isStaple(n));
+      const have = needed.filter((n) => regexes.some((r) => r.test(n))).length;
+      return { ...card, matched, missing: Math.max(0, needed.length - have) };
+    });
+
+    scored.sort(
+      (a, b) => b.matched.length - a.matched.length || a.missing - b.missing || a.title.localeCompare(b.title, 'pt'),
+    );
+    res.json({ terms, total: scored.length, items: scored.slice(0, parsed.data.limit) });
+  }),
+);
+
 const createSchema = z.object({
   title: z.string().trim().min(3, 'O título precisa ter pelo menos 3 caracteres').max(120),
   category: categoryEnum,

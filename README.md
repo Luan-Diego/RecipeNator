@@ -41,6 +41,13 @@ npm run dev              # http://localhost:5173
 - API: `GET/POST /api/collections`, `GET/PATCH/DELETE /api/collections/:id`, `POST /api/collections/:id/recipes`,
   `DELETE /api/collections/:id/recipes/:recipeId`.
 
+## Busca por ingredientes
+
+- A barra da Home ("Tenho frango, arroz e tomate…") leva a `/search?ingredients=...`, que lista as receitas ordenadas pelos
+  ingredientes que você já tem e mostra quantos itens faltam. Sal, água, óleo, azeite e pimenta não contam como faltando.
+- API: `GET /api/recipes/by-ingredients?items=frango,arroz,tomate`. Ignora acentos e maiúsculas e aceita plural.
+- Funciona melhor com as receitas em português (da casa e de usuários). As importadas da TheMealDB estão em inglês.
+
 ## Receitas da TheMealDB (API gratuita)
 
 Com a API e o MongoDB rodando, importe algumas receitas por categoria:

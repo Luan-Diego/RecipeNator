@@ -1,4 +1,5 @@
-import { Link } from 'react-router-dom';
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import RecipeCard from '../components/RecipeCard';
 import { Wordmark } from '../components/Logo';
 import { categories, dietFilters, plantBased as plantFallback, trending as trendingFallback } from '../data/sample';
@@ -14,6 +15,8 @@ function chipClass(label: string) {
 }
 
 export default function Home() {
+  const navigate = useNavigate();
+  const [ingredientText, setIngredientText] = useState('');
   const { items: picks } = useRecipes({ featured: true, sort: 'featured', limit: 6 }, trendingFallback.slice(0, 6));
   const { items: trending } = useRecipes({ featured: false, sort: 'recent', limit: 8 }, []);
   const { items: plantBased } = useRecipes({ diet: 'vegana', limit: 3 }, plantFallback);
@@ -45,7 +48,11 @@ export default function Home() {
             <form
               role="search"
               className="flex max-w-[600px] flex-wrap items-center gap-3 rounded-full border-2 border-espresso bg-paper py-2 pl-6 pr-2"
-              onSubmit={(e) => e.preventDefault()}
+              onSubmit={(e) => {
+                e.preventDefault();
+                const text = ingredientText.trim();
+                navigate(text ? `/search?ingredients=${encodeURIComponent(text)}` : '/recipes');
+              }}
             >
               <label htmlFor="ingredientes" className="sr-only">
                 Ingredientes que você tem
@@ -53,6 +60,8 @@ export default function Home() {
               <input
                 id="ingredientes"
                 type="text"
+                value={ingredientText}
+                onChange={(e) => setIngredientText(e.target.value)}
                 placeholder="Tenho frango, arroz e tomate…"
                 className="min-w-0 flex-[1_1_200px] bg-transparent py-2.5 text-lg outline-none placeholder:text-cacau/70"
               />

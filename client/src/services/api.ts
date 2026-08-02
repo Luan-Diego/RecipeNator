@@ -124,6 +124,24 @@ export async function fetchRecipes(query: RecipeQuery = {}): Promise<RecipeCardD
   return (await fetchRecipePage(query)).items;
 }
 
+export type IngredientMatch = { card: RecipeCardData; matched: string[]; missing: number };
+
+/** Receitas que usam os ingredientes digitados (ex.: "frango, arroz e tomate"). */
+export async function fetchByIngredients(text: string): Promise<{ terms: string[]; items: IngredientMatch[] }> {
+  const res = await fetch(`/api/recipes/by-ingredients?items=${encodeURIComponent(text)}`);
+  const data = (await res.json().catch(() => ({}))) as {
+    message?: string;
+    terms?: string[];
+    items?: (Parameters<typeof mapCards>[0][number] & { matched: string[]; missing: number })[];
+  };
+  if (!res.ok || !data.items) throw new Error(data.message ?? `API respondeu ${res.status}`);
+  const cards = mapCards(data.items);
+  return {
+    terms: data.terms ?? [],
+    items: cards.map((card, i) => ({ card, matched: data.items![i]!.matched, missing: data.items![i]!.missing })),
+  };
+}
+
 /** Devolve a receita, ou null se não existir (404). */
 export async function fetchRecipe(slug: string): Promise<RecipeDetail | null> {
   const res = await fetch(`/api/recipes/${encodeURIComponent(slug)}`);
