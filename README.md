@@ -6,19 +6,24 @@ Stack: React + TypeScript + Vite + Tailwind CSS (client) · Node.js + Express + 
 
 ## Como rodar
 
-Em dois terminais, a partir da pasta do projeto:
+O projeto tem duas partes que precisam estar ligadas ao mesmo tempo: o **servidor** (API, porta 4000) e o **site**
+(porta 5173). O site é sempre aberto em `http://localhost:5173`.
+
+### Com um comando só (na pasta do projeto)
 
 ```bash
-# 1) API
-cd server
-cp .env.example .env     # ajuste MONGODB_URI e preencha JWT_SECRET (o comando para gerar está no arquivo)
-npm install
-npm run dev              # http://localhost:4000/api/health
+cp server/.env.example server/.env   # só na primeira vez; preencha MONGODB_URI e JWT_SECRET
+npm run install:all                  # só na primeira vez: instala tudo
+npm run dev                          # liga servidor e site juntos
+```
 
-# 2) Site
-cd client
-npm install
-npm run dev              # http://localhost:5173
+Para parar, Ctrl+C. Outros atalhos na raiz: `npm run seed`, `npm run photos`, `npm run import:mealdb -- --limit 10`.
+
+### Ou em dois terminais
+
+```bash
+cd server && npm install && npm run dev    # http://localhost:4000/api/health
+cd client && npm install && npm run dev    # http://localhost:5173
 ```
 
 ## Receitas da casa e destaques

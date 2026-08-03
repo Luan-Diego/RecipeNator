@@ -1,0 +1,17 @@
+{
+  "name": "recipenator",
+  "private": true,
+  "version": "0.1.0",
+  "description": "RecipeNator: servidor (Express + MongoDB) e site (React) rodando juntos com um comando.",
+  "scripts": {
+    "install:all": "npm install && npm --prefix server install && npm --prefix client install",
+    "dev": "concurrently --names servidor,site --prefix-colors yellow,cyan \"npm --prefix server run dev\" \"npm --prefix client run dev\"",
+    "build": "npm --prefix server run build && npm --prefix client run build",
+    "seed": "npm --prefix server run seed",
+    "photos": "npm --prefix server run photos",
+    "import:mealdb": "npm --prefix server run import:mealdb --"
+  },
+  "devDependencies": {
+    "concurrently": "^9.0.1"
+  }
+}
